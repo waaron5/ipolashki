@@ -1,0 +1,85 @@
+/* PROTOTYPE styles — light surround, floating chrome (per the app layout prototype) */
+:root {
+  --ink: #2b2a28;
+  --muted: #7a746b;
+  --line: #e4dfd6;
+  --surface: #fbf9f5;
+  --paper: #ffffff;
+  --accent: #2f6fde;
+  font: 14px/1.4 Inter, system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; overflow: hidden; background: var(--surface); }
+button, select, .btn {
+  font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer;
+}
+button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+button:disabled { opacity: 0.4; cursor: default; }
+
+.app { position: fixed; inset: 0; }
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; background: var(--paper); user-select: none; -webkit-user-select: none; }
+.canvas.tool-pen, .canvas.tool-eraser { cursor: crosshair; }
+.tag { font-size: 12px; fill: #d64541; }
+
+.toolbar {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 4px; padding: 6px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08);
+}
+.toolbar button { width: 52px; height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0; border: none; font-size: 18px; }
+.toolbar button span { font-size: 10px; }
+.toolbar button i { display: block; border-radius: 50%; background: currentColor; }
+.toolbar hr { width: 100%; border: none; border-top: 1px solid var(--line); margin: 2px 0; }
+
+.topbar { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; z-index: 3; }
+.topbar button { box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+
+.chooser {
+  position: absolute; transform: translateX(-50%); display: flex; gap: 4px; padding: 4px; z-index: 2;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  white-space: nowrap;
+}
+.chooser button { border: none; padding: 6px 10px; }
+.chooser small { margin-left: 6px; opacity: .55; font-size: 11px; }
+
+.panel {
+  position: absolute; right: 12px; top: 56px; bottom: 12px; width: 340px; overflow-y: auto; z-index: 2;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08);
+  padding: 14px 16px;
+}
+.panel header p { color: var(--muted); margin: 6px 0 0; }
+.panel section { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 10px; }
+.panel h3 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.panel h4 { margin: 12px 0 4px; font-size: 12px; color: var(--muted); }
+.hint { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+.row { display: flex; gap: 8px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+.field { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 6px 0; }
+.slider { display: block; margin: 10px 0; }
+.slider span { display: flex; justify-content: space-between; }
+.slider input { width: 100%; }
+.slider small { display: block; color: var(--muted); font-size: 11px; }
+.tabs { display: flex; gap: 4px; }
+.tabs button { flex: 1; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; font-size: 13px; }
+dt { color: var(--muted); }
+dd { margin: 0; }
+.cands { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+.cands td { padding: 2px 4px; }
+.cands tr.won td:first-child { font-weight: 600; }
+.cands .bar { position: relative; width: 50%; }
+.cands .bar div { height: 8px; background: #c9c3b8; border-radius: 4px; }
+.cands tr.won .bar div { background: var(--accent); }
+.cands .bar i { position: absolute; top: 0; bottom: 0; width: 2px; background: #d64541; }
+.score { width: 100%; border-collapse: collapse; font-size: 12px; }
+.score th, .score td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--line); }
+.score th:first-child, .score td:first-child { text-align: left; }
+.score th { font-weight: 500; color: var(--muted); font-size: 11px; vertical-align: bottom; }
+
+@media (max-width: 760px) {
+  .toolbar { top: auto; bottom: 12px; left: 50%; transform: translateX(-50%); flex-direction: row; }
+  .toolbar hr { width: 1px; height: auto; border-top: none; border-left: 1px solid var(--line); margin: 0 2px; }
+  .toolbar button { width: 46px; }
+  .panel { left: 8px; right: 8px; width: auto; top: auto; bottom: 8px; height: 60vh; }
+}
