@@ -1,0 +1,56 @@
+# Glossary
+
+ipolashki is a tool for composing clean, mid-century-modern-style painting references: you build a design, then print it and paint from it.
+
+## Language
+
+**Design**:
+One document the painter edits, auto-saved and filed among their other designs.
+_Avoid_: mock-up, creation, project, file
+
+**Canvas**:
+The bounded area of a design, sized in physical units (inches or cm) to match a real painting surface. Resizing the canvas crops or pads the design; it never scales it.
+_Avoid_: artboard, page
+
+**Element**:
+Any single thing placed on the canvas: a shape, line, path, text, or image. Each element is one row in the layers list.
+_Avoid_: object, aspect, layer (when meaning a single thing)
+
+**Layers**:
+The ordered stack of elements (and groups) in a design, front to back, through which any element can be selected, edited, hidden, locked, or deleted on its own.
+
+**Group**:
+Several elements bundled so they select, move, and edit as one, while each stays individually editable inside it.
+
+**Piece**:
+A group saved to the painter's personal library so it can be placed into other designs.
+_Avoid_: asset, component, symbol, aspect
+
+**Tracing image**:
+An imported photo or picture placed on the canvas as a guide to draw over; typically dimmed and locked, and hidden before printing.
+_Avoid_: background image
+
+**Reference**:
+The printable output of a design (a PDF), optionally overlaid with a reference grid, that the painter works from at the easel.
+_Avoid_: export, print, mock-up
+
+**Reference grid**:
+A grid of evenly spaced lines, measured in physical units, overlaid on a reference so the design can be transferred square-by-square onto the real canvas.
+
+**Palette**:
+A named, ordered set of colors to pick from. Some ship with the app (paint-tube sets, mid-century sets); the painter can create their own.
+_Avoid_: swatch set, theme
+
+**Paint color**:
+A palette color that stands for a real acrylic or oil paint and carries that paint's name (e.g. "Cadmium Red Medium").
+
+**Color key**:
+A legend on a reference listing every color used in the design, with its swatch and name, so the painter knows which paints to set out.
+_Avoid_: legend, color chart
+
+## Relationships
+
+- A **Design** has exactly one **Canvas** and any number of **Elements**, ordered in its **Layers**.
+- A **Group** contains one or more **Elements** (or nested **Groups**).
+- A **Piece** is created from a **Group**; placing a **Piece** into a **Design** adds a copy of its elements as a new **Group**.
+- A **Reference** is produced from one **Design**, at the **Canvas**'s physical size or fitted to paper.
