@@ -28,7 +28,7 @@ _Avoid_: area, cell, face
 The ordered stack of elements (and groups) in a design, front to back, through which any element can be selected, edited, hidden, locked, or deleted on its own.
 
 **Group**:
-Several elements bundled so they select, move, and edit as one, while each stays individually editable inside it.
+Several elements the painter deliberately bundled so they select, move, and edit as one, while each stays individually editable inside it. The app never groups elements on its own.
 
 **Piece**:
 A group saved to the painter's personal library so it can be placed into other designs.
@@ -49,6 +49,10 @@ A grid of evenly spaced lines, measured in physical units, overlaid on a referen
 A named, ordered set of colors to pick from. Some ship with the app (paint-tube sets, mid-century sets); the painter can create their own.
 _Avoid_: swatch set, theme
 
+**Current color**:
+The one color the drawing tools use for whatever they make next: outlines, fills, and text all take it.
+_Avoid_: active color, foreground/background color, stroke color or fill color (when meaning this)
+
 **Paint color**:
 A palette color that stands for a real acrylic or oil paint and carries that paint's name (e.g. "Cadmium Red Medium").
 
@@ -59,7 +63,8 @@ _Avoid_: legend, color chart
 ## Relationships
 
 - A **Design** has exactly one **Canvas** and any number of **Elements**, ordered in its **Layers**.
-- A **Group** contains one or more **Elements** (or nested **Groups**).
+- A **Group** contains one or more **Elements** (or nested **Groups**). Groups come only from the painter grouping elements or placing a **Piece**.
+- Only stroked **Elements** and the **Canvas** edge bound a **Region**; text, tracing images, and fill-only elements do not.
 - A **Piece** is created from a **Group**; placing a **Piece** into a **Design** adds a copy of its elements as a new **Group**.
 - Filling a **Region** adds a new filled **Element** behind the lines that bound it; it does not stay attached to them.
 - A **Reference** is produced from one **Design**, at the **Canvas**'s physical size or fitted to paper.
