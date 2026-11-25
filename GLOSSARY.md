@@ -34,6 +34,10 @@ Several elements the painter deliberately bundled so they select, move, and edit
 A group saved to the painter's personal library so it can be placed into other designs.
 _Avoid_: asset, component, symbol, aspect
 
+**Library shape**:
+A ready-made shape that ships with the app, picked from the built-in shape library. Placing it adds an independent copy, just as placing a piece does; the painter cannot change the library itself.
+_Avoid_: stamp, clip art, template, preset
+
 **Tracing image**:
 An imported photo or picture placed on the canvas. Every imported image is a tracing image: usually a dimmed, locked guide to draw over and left out of the reference, but the painter can switch it on to appear in the reference as part of the artwork.
 _Avoid_: background image, image element
@@ -67,4 +71,6 @@ _Avoid_: legend, color chart
 - Only stroked **Elements** and the **Canvas** edge bound a **Region**; text, tracing images, and fill-only elements do not.
 - A **Piece** is created from a **Group**; placing a **Piece** into a **Design** adds a copy of its elements as a new **Group**.
 - Filling a **Region** adds a new filled **Element** behind the lines that bound it; it does not stay attached to them.
+- Placing a **Library shape** adds a copy as a **Live shape** when its form is one, as a plain path otherwise, or as a new **Group** when it has several parts.
+- An **Element** keeps its own copy of each color it uses (and the color's name, if any); changing a **Palette** never changes existing **Designs**.
 - A **Reference** is produced from one **Design**, at the **Canvas**'s physical size or fitted to paper.
