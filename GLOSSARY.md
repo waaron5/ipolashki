@@ -13,8 +13,16 @@ The bounded area of a design, sized in physical units (inches or cm) to match a 
 _Avoid_: artboard, page
 
 **Element**:
-Any single thing placed on the canvas: a shape, line, path, text, or image. Each element is one row in the layers list.
+Any single thing placed on the canvas: a shape, line, path, text, or tracing image. Each element is one row in the layers list.
 _Avoid_: object, aspect, layer (when meaning a single thing)
+
+**Live shape**:
+A shape that keeps its defining measurements (radius, sides, arc, wave count) so it can be adjusted by number; molding its points turns it into an ordinary custom path.
+_Avoid_: primitive, parametric shape
+
+**Region**:
+A closed area of the canvas bounded by any lines, shape edges, or the canvas edge, which the painter can fill with one color.
+_Avoid_: area, cell, face
 
 **Layers**:
 The ordered stack of elements (and groups) in a design, front to back, through which any element can be selected, edited, hidden, locked, or deleted on its own.
@@ -27,8 +35,8 @@ A group saved to the painter's personal library so it can be placed into other d
 _Avoid_: asset, component, symbol, aspect
 
 **Tracing image**:
-An imported photo or picture placed on the canvas as a guide to draw over; typically dimmed and locked, and hidden before printing.
-_Avoid_: background image
+An imported photo or picture placed on the canvas. Every imported image is a tracing image: usually a dimmed, locked guide to draw over and left out of the reference, but the painter can switch it on to appear in the reference as part of the artwork.
+_Avoid_: background image, image element
 
 **Reference**:
 The printable output of a design (a PDF), optionally overlaid with a reference grid, that the painter works from at the easel.
@@ -53,4 +61,5 @@ _Avoid_: legend, color chart
 - A **Design** has exactly one **Canvas** and any number of **Elements**, ordered in its **Layers**.
 - A **Group** contains one or more **Elements** (or nested **Groups**).
 - A **Piece** is created from a **Group**; placing a **Piece** into a **Design** adds a copy of its elements as a new **Group**.
+- Filling a **Region** adds a new filled **Element** behind the lines that bound it; it does not stay attached to them.
 - A **Reference** is produced from one **Design**, at the **Canvas**'s physical size or fitted to paper.
