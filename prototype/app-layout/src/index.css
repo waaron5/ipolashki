@@ -1,0 +1,5 @@
+@import "tailwindcss";
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: Inter, system-ui, sans-serif; background: #e9e6df; color: #1f2430; overscroll-behavior: none; -webkit-user-select: none; user-select: none; }
+input, select, textarea { -webkit-user-select: text; user-select: text; }
+button { cursor: pointer; }
