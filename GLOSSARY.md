@@ -47,7 +47,7 @@ The printable output of a design (a PDF), optionally overlaid with a reference g
 _Avoid_: export, print, mock-up
 
 **Reference grid**:
-A grid of evenly spaced lines, measured in physical units, overlaid on a reference so the design can be transferred square-by-square onto the real canvas.
+A grid of square cells, measured in physical units from the canvas's top-left corner, that a design can show while it's composed and carry onto its reference, so the design can be transferred square-by-square onto the real canvas.
 
 **Palette**:
 A named, ordered set of colors to pick from. Some ship with the app (paint-tube sets, mid-century sets); the painter can create their own.
@@ -60,10 +60,6 @@ _Avoid_: active color, foreground/background color, stroke color or fill color (
 **Paint color**:
 A palette color that stands for a real acrylic or oil paint and carries that paint's name (e.g. "Cadmium Red Medium").
 
-**Color key**:
-A legend on a reference listing every color used in the design, with its swatch and name, so the painter knows which paints to set out.
-_Avoid_: legend, color chart
-
 ## Relationships
 
 - A **Design** has exactly one **Canvas** and any number of **Elements**, ordered in its **Layers**.
@@ -73,4 +69,4 @@ _Avoid_: legend, color chart
 - Filling a **Region** adds a new filled **Element** behind the lines that bound it; it does not stay attached to them.
 - Placing a **Library shape** adds a copy as a **Live shape** when its form is one, as a plain path otherwise, or as a new **Group** when it has several parts.
 - An **Element** keeps its own copy of each color it uses (and the color's name, if any); changing a **Palette** never changes existing **Designs**.
-- A **Reference** is produced from one **Design**, at the **Canvas**'s physical size or fitted to paper.
+- A **Reference** is produced from one **Design**, fitted to a single sheet of paper.
