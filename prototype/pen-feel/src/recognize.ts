@@ -13,6 +13,8 @@ export type Shape =
   | { kind: 'arc'; c: Pt; r: number; start: number; sweep: number }
   | { kind: 'rect'; c: Pt; w: number; h: number; rot: number }
   | { kind: 'triangle'; p: [Pt, Pt, Pt] }
+  // closed half circle (D shape): an arc of 180° plus its straight diameter; `rot` points from c to the arc's apex
+  | { kind: 'semicircle'; c: Pt; r: number; rot: number }
   // a→b is the straight baseline. Peaks (smooth/zigzag) or cusps (scallop) sit at
   // `phase + k·period` along it; `cuspSign` says which side the scallop cusps are on.
   | { kind: 'wave'; style: WaveStyle; a: Pt; b: Pt; period: number; amplitude: number; phase: number; cuspSign: 1 | -1 }
@@ -157,6 +159,8 @@ export function shapePoly(s: Shape): { pts: Pt[]; closed: boolean } {
     }
     case 'triangle':
       return { pts: [...s.p], closed: true }
+    case 'semicircle':
+      return { pts: ring(s.c, s.r, s.r, 0, s.rot - Math.PI / 2, Math.PI, 48, false), closed: true }
     case 'wave':
       return { pts: wavePoly(s), closed: false }
   }
@@ -390,6 +394,46 @@ function fitTriangle(s: Pt[], diag: number): Shape | null {
   return { kind: 'triangle', p: [p[0], p[1], p[2]] }
 }
 
+// D shape: find the two corners at the ends of the diameter (straw minima), take the run between
+// them that is straight as the diameter, center the circle on it, and keep the pair that fits best.
+function fitSemicircle(s: Pt[], o: RecognizeOpts, diag: number): Shape | null {
+  const n = s.length, w = 4
+  const straw = s.map((_, i) => dist(s[(i - w + n) % n], s[(i + w) % n]))
+  const mins: number[] = []
+  for (let i = 0; i < n; i++) {
+    let isMin = true
+    for (let j = -w; j <= w && isMin; j++) if (j && straw[(i + j + n) % n] < straw[i]) isMin = false
+    if (isMin) mins.push(i)
+  }
+  mins.sort((a, b) => straw[a] - straw[b])
+  const top = mins.slice(0, 6)
+  let best: { shape: Shape; err: number } | null = null
+  for (let x = 0; x < top.length; x++) for (let y = 0; y < top.length; y++) {
+    const i = top[x], j = top[y]
+    if (i === j) continue
+    const len = (j - i + n) % n // run i→j is the diameter candidate; j→i is the arc
+    if (len < n * 0.2 || len > n * 0.55) continue
+    const dia: Pt[] = [], arc: Pt[] = []
+    for (let t = 0; t <= len; t++) dia.push(s[(i + t) % n])
+    for (let t = 0; t <= n - len; t++) arc.push(s[(j + t) % n])
+    const L = pca(dia)
+    const t1 = dot(sub(s[i], L.c), L.dir), t2 = dot(sub(s[j], L.c), L.dir)
+    const c = add(L.c, mul(L.dir, (t1 + t2) / 2))
+    const side = arc.reduce((m, p) => m + dot(sub(p, c), L.nrm), 0)
+    if (Math.abs(side) < 1e-9) continue
+    const r = arc.reduce((m, p) => m + dist(p, c), 0) / arc.length
+    if (r < diag * 0.2) continue
+    const apex = side > 0 ? L.nrm : mul(L.nrm, -1)
+    const rot = snapAngle(Math.atan2(apex.y, apex.x), o.angleSnapDeg)
+    const shape: Shape = { kind: 'semicircle', c, r, rot }
+    const poly = shapePoly(shape)
+    let sq = 0
+    for (const p of s) sq += distToPoly(p, poly.pts, true) ** 2
+    if (!best || sq < best.err) best = { shape, err: sq }
+  }
+  return best && best.shape
+}
+
 function fitRect(s: Pt[], o: RecognizeOpts): Shape | null {
   const sides = polygonSides(s, 4)
   if (!sides) return null
@@ -504,10 +548,10 @@ function fitWaves(raw: Pt[]): { cands: { style: WaveStyle; shape: Shape; conf: n
 
 // ---------- public API ----------
 const LABEL: Record<string, string> = {
-  line: 'Line', circle: 'Circle', ellipse: 'Ellipse', arc: 'Arc', rect: 'Rectangle', triangle: 'Triangle',
+  line: 'Line', circle: 'Circle', ellipse: 'Ellipse', arc: 'Arc', rect: 'Rectangle', triangle: 'Triangle', semicircle: 'Half circle',
   'wave-smooth': 'Smooth wave', 'wave-zigzag': 'Zigzag', 'wave-scallop': 'Scallops',
 }
-const RANK: Record<string, number> = { line: 0, arc: 1, circle: 2, ellipse: 3, triangle: 4, rect: 5, 'wave-smooth': 6, 'wave-zigzag': 7, 'wave-scallop': 8 }
+const RANK: Record<string, number> = { line: 0, arc: 1, circle: 2, semicircle: 2.5, ellipse: 3, triangle: 4, rect: 5, 'wave-smooth': 6, 'wave-zigzag': 7, 'wave-scallop': 8 }
 
 export function labelFor(c: Candidate) {
   if (c.shape.kind === 'arc' && Math.abs(Math.abs(c.shape.sweep) - Math.PI) < 1e-6) return 'Half circle'
@@ -540,6 +584,7 @@ export function recognize(raw: Pt[], o: RecognizeOpts): Recognition {
     score('ellipse', fitEllipse(s))
     score('triangle', fitTriangle(s, diag))
     score('rect', fitRect(s, o))
+    score('semicircle', fitSemicircle(s, o, diag))
   } else {
     score('line', fitLine(s, o))
     score('arc', fitArc(s, o, diag))

@@ -56,6 +56,12 @@ export function shapeToD(s: Shape): string {
       p = new paper.Path.Arc({ from: at(s.start), through: at(s.start + s.sweep / 2), to: at(s.start + s.sweep), insert: false })
       break
     }
+    case 'semicircle': {
+      const at = (t: number) => P({ x: s.c.x + s.r * Math.cos(t), y: s.c.y + s.r * Math.sin(t) })
+      p = new paper.Path.Arc({ from: at(s.rot - Math.PI / 2), through: at(s.rot), to: at(s.rot + Math.PI / 2), insert: false })
+      p.closed = true
+      break
+    }
     case 'rect':
       p = new paper.Path.Rectangle({ point: [s.c.x - s.w / 2, s.c.y - s.h / 2], size: [s.w, s.h], insert: false })
       p.rotate((s.rot * 180) / Math.PI, P(s.c))
